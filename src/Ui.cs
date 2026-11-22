@@ -145,7 +145,7 @@ namespace SamsungCONNECT
                 confirmDetail = Theme.Text(ConfirmText(), 20, FontWeights.Normal, p.SubText);
                 confirmDetail.TextAlignment = TextAlignment.Center; confirmDetail.Margin = new Thickness(0, 10, 0, 0); confirmDetail.MaxWidth = 640;
                 body.Children.Add(confirmDetail);
-                confirmSeconds = Theme.Text(confirmLeft.ToString(), 64, FontWeights.Bold, p.Accent);
+                confirmSeconds = Theme.Text(confirmLeft.ToString(), 64, FontWeights.Bold, p.AccentInk);
                 confirmSeconds.HorizontalAlignment = HorizontalAlignment.Center; confirmSeconds.VerticalAlignment = VerticalAlignment.Center;
                 Border dial = Theme.Inset(confirmSeconds, 80); dial.Width = 160; dial.Height = 160; dial.Margin = new Thickness(0, 30, 0, 34);
                 dial.HorizontalAlignment = HorizontalAlignment.Center;
@@ -245,7 +245,7 @@ namespace SamsungCONNECT
             IntPtr hwnd = new WindowInteropHelper(this).Handle;
             if (hwnd == IntPtr.Zero) return;
             Palette p = Theme.Current;
-            int dark = p.IsDark ? 1 : 0, caption = p.Base.R | (p.Base.G << 8) | (p.Base.B << 16), text = p.Text.R | (p.Text.G << 8) | (p.Text.B << 16);
+            int dark = 1, caption = p.Base.R | (p.Base.G << 8) | (p.Base.B << 16), text = p.BaseText.R | (p.BaseText.G << 8) | (p.BaseText.B << 16);
             try
             {
                 DwmSetWindowAttribute(hwnd, 20, ref dark, 4);    // Dark title bar
@@ -308,11 +308,11 @@ namespace SamsungCONNECT
             Grid header = new Grid();
             header.ColumnDefinitions.Add(new ColumnDefinition()); header.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             StackPanel brand = new StackPanel { Orientation = Orientation.Horizontal };
-            Neu mark = new Neu(Theme.Glyph(Glyphs.Tv, 30, p.Accent), 36, 7, false) { Width = 72, Height = 72 };
+            Neu mark = new Neu(Theme.Glyph(Glyphs.Tv, 30, p.AccentInk), 36, 7, false) { Width = 72, Height = 72 };
             brand.Children.Add(mark);
             StackPanel names = new StackPanel { Margin = new Thickness(22, 2, 0, 0), VerticalAlignment = VerticalAlignment.Center };
-            names.Children.Add(Theme.Text("SamsungCONNECT", 32, FontWeights.Bold, p.Text));
-            names.Children.Add(Theme.Text("Your laptop. Your TV. One big screen.", 18, FontWeights.Normal, p.SubText));
+            names.Children.Add(Theme.Text("SamsungCONNECT", 32, FontWeights.Bold, p.BaseText));
+            names.Children.Add(Theme.Text("Your laptop. Your TV. One big screen.", 18, FontWeights.Normal, p.BaseSubText));
             brand.Children.Add(names);
             header.Children.Add(brand);
             StackPanel tools = Row(); Grid.SetColumn(tools, 1); tools.VerticalAlignment = VerticalAlignment.Center;
@@ -322,12 +322,12 @@ namespace SamsungCONNECT
             page.Children.Add(header);
 
             StackPanel heading = new StackPanel { Margin = new Thickness(0, 34, 0, 26) };
-            heading.Children.Add(Theme.Text(busy ? "Connecting your TV" : "How is your TV connected?", 30, FontWeights.SemiBold, p.Text));
+            heading.Children.Add(Theme.Text(busy ? "Connecting your TV" : "How is your TV connected?", 30, FontWeights.SemiBold, p.BaseText));
             if (!busy)
             {
                 StackPanel line = Row(); line.Margin = new Thickness(0, 8, 0, 0);
-                if (statusError) line.Children.Add(new Ellipse { Width = 10, Height = 10, Fill = Theme.Brush(p.Danger), Margin = new Thickness(0, 0, 10, 0), VerticalAlignment = VerticalAlignment.Center });
-                TextBlock status = Theme.Text(statusError ? statusTitle + ": " + statusDetail : statusDetail, 18, FontWeights.Normal, statusError ? p.Danger : p.SubText);
+                if (statusError) line.Children.Add(new Ellipse { Width = 10, Height = 10, Fill = Theme.Brush(p.Accent), Margin = new Thickness(0, 0, 10, 0), VerticalAlignment = VerticalAlignment.Center });
+                TextBlock status = Theme.Text(statusError ? statusTitle + ": " + statusDetail : statusDetail, 18, FontWeights.Normal, statusError ? p.BaseText : p.BaseSubText);
                 status.MaxWidth = 1100;
                 line.Children.Add(status);
                 heading.Children.Add(line);
@@ -340,9 +340,9 @@ namespace SamsungCONNECT
             {
                 Grid cards = new Grid();
                 cards.ColumnDefinitions.Add(new ColumnDefinition()); cards.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(40) }); cards.ColumnDefinitions.Add(new ColumnDefinition());
-                Neu wireless = MethodCard("wireless", Theme.Glyph(Glyphs.Cast, 50, p.Accent), "Wireless", "Screen Mirroring (Miracast). Turn on the TV and keep Wi-Fi on.",
-                    "TV name: " + app.TvName, p.Accent, "1", app.ConnectWireless);
-                Neu hdmi = MethodCard("hdmi", Theme.HdmiIcon(52, p.Accent), "HDMI cable", "Plug the cable into the laptop and pick that HDMI input on the TV.",
+                Neu wireless = MethodCard("wireless", Theme.Glyph(Glyphs.Cast, 50, p.AccentInk), "Wireless", "Screen Mirroring (Miracast). Turn on the TV and keep Wi-Fi on.",
+                    "TV name: " + app.TvName, p.AccentInk, "1", app.ConnectWireless);
+                Neu hdmi = MethodCard("hdmi", Theme.HdmiIcon(52, p.AccentInk), "HDMI cable", "Plug the cable into the laptop and pick that HDMI input on the TV.",
                     hdmiFound ? "Found: " + hdmiLabel : hdmiLabel ?? "Not detected yet", hdmiFound ? p.Ok : p.SubText, "2", app.ConnectHdmi);
                 Grid.SetColumn(hdmi, 2);
                 cards.Children.Add(wireless); cards.Children.Add(hdmi);
@@ -397,16 +397,16 @@ namespace SamsungCONNECT
             Palette p = Theme.Current;
             Grid body = new Grid { Margin = new Thickness(48, 44, 48, 40) };
             body.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); body.ColumnDefinitions.Add(new ColumnDefinition());
-            Border well = Theme.Inset(Theme.Spinner(84, p.Accent), 64); well.Width = 128; well.Height = 128; well.VerticalAlignment = VerticalAlignment.Top;
+            Border well = Theme.Inset(Theme.Spinner(84, p.AccentInk), 64); well.Width = 128; well.Height = 128; well.VerticalAlignment = VerticalAlignment.Top;
             body.Children.Add(well);
             StackPanel text = new StackPanel { Margin = new Thickness(40, 0, 0, 0) }; Grid.SetColumn(text, 1);
-            text.Children.Add(Theme.Text("STEP " + Math.Max(1, statusStep) + " OF 3", 16, FontWeights.Bold, p.Accent));
+            text.Children.Add(Theme.Text("STEP " + Math.Max(1, statusStep) + " OF 3", 16, FontWeights.Bold, p.AccentInk));
             TextBlock t = Theme.Text(statusTitle, 32, FontWeights.Bold, p.Text); t.Margin = new Thickness(0, 8, 0, 0); text.Children.Add(t);
             TextBlock d = Theme.Text(statusDetail, 19, FontWeights.Normal, p.SubText); d.Margin = new Thickness(0, 10, 0, 22); text.Children.Add(d);
             StackPanel dots = Row(); dots.Margin = new Thickness(0, 0, 0, 30);
             for (int i = 1; i <= 3; i++)
                 dots.Children.Add(new Border { Width = 56, Height = 8, CornerRadius = new CornerRadius(4), Margin = new Thickness(0, 0, 10, 0),
-                    Background = i <= Math.Max(1, statusStep) ? Theme.Brush(p.Accent) : Theme.Brush(p.SubText, 0.25) });
+                    Background = i <= Math.Max(1, statusStep) ? Theme.Brush(p.AccentInk) : Theme.Brush(p.SubText, 0.25) });
             text.Children.Add(dots);
             Neu cancel = Pill(Glyphs.Back, "Cancel, stay on laptop", false, app.Cancel); cancel.HorizontalAlignment = HorizontalAlignment.Left;
             text.Children.Add(cancel);
@@ -427,9 +427,9 @@ namespace SamsungCONNECT
             Grid header = new Grid { Margin = new Thickness(76, 44, 76, 6) };
             header.ColumnDefinitions.Add(new ColumnDefinition()); header.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             StackPanel time = new StackPanel();
-            greetText = Theme.Text("", 24, FontWeights.SemiBold, p.SubText);
-            clockText = Theme.Text("", 72, FontWeights.Bold, p.Text); clockText.Margin = new Thickness(0, -4, 0, -6);
-            dateText = Theme.Text("", 22, FontWeights.Normal, p.SubText);
+            greetText = Theme.Text("", 24, FontWeights.SemiBold, p.BaseSubText);
+            clockText = Theme.Text("", 72, FontWeights.Bold, p.BaseText); clockText.Margin = new Thickness(0, -4, 0, -6);
+            dateText = Theme.Text("", 22, FontWeights.Normal, p.BaseSubText);
             time.Children.Add(greetText); time.Children.Add(clockText); time.Children.Add(dateText);
             header.Children.Add(time);
 
@@ -469,7 +469,7 @@ namespace SamsungCONNECT
                 }
                 if (section == Catalog.MyTiles) wrap.Children.Add(AddTile());
                 if (wrap.Children.Count == 0) continue;
-                TextBlock h = Theme.Text(section, 26, FontWeights.SemiBold, p.SubText); h.Margin = new Thickness(4, 30, 0, 22);
+                TextBlock h = Theme.Text(section, 26, FontWeights.SemiBold, p.BaseSubText); h.Margin = new Thickness(4, 30, 0, 22);
                 content.Children.Add(h); content.Children.Add(wrap);
             }
             ScrollViewer scroll = new ScrollViewer { Content = content, VerticalScrollBarVisibility = ScrollBarVisibility.Hidden,
@@ -500,7 +500,7 @@ namespace SamsungCONNECT
         {
             Palette p = Theme.Current;
             StackPanel body = new StackPanel { VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center };
-            Border well = Theme.Inset(Theme.Glyph(Glyphs.Add, 40, p.Accent), 30); well.Width = 112; well.Height = 112;
+            Border well = Theme.Inset(Theme.Glyph(Glyphs.Add, 40, p.AccentInk), 30); well.Width = 112; well.Height = 112;
             body.Children.Add(well);
             TextBlock name = Theme.Text("Add a site", 20, FontWeights.SemiBold, p.SubText); name.HorizontalAlignment = HorizontalAlignment.Center; name.Margin = new Thickness(0, 18, 0, 0);
             body.Children.Add(name);
@@ -746,7 +746,7 @@ namespace SamsungCONNECT
         // ---------- Small builders ----------
 
         static StackPanel Row() { return new StackPanel { Orientation = Orientation.Horizontal }; }
-        static TextBlock Hint(string text) { TextBlock t = Theme.Text(text, 15, FontWeights.Normal, Theme.Current.SubText); t.HorizontalAlignment = HorizontalAlignment.Right; return t; }
+        static TextBlock Hint(string text) { TextBlock t = Theme.Text(text, 15, FontWeights.Normal, Theme.Current.BaseSubText); t.HorizontalAlignment = HorizontalAlignment.Right; return t; }
         static TextBlock Label(string text) { TextBlock t = Theme.Text(text.ToUpperInvariant(), 15, FontWeights.Bold, Theme.Current.SubText); t.Margin = new Thickness(4, 30, 0, 14); return t; }
         static TextBlock Note(string text) { TextBlock t = Theme.Text(text, 16, FontWeights.Normal, Theme.Current.SubText); t.Margin = new Thickness(4, 12, 0, 0); return t; }
 
@@ -754,7 +754,7 @@ namespace SamsungCONNECT
         {
             Palette p = Theme.Current;
             TextBox box = new TextBox { Text = text, MaxLength = max, FontSize = 21, FontFamily = Theme.Font, Background = Brushes.Transparent, BorderThickness = new Thickness(0),
-                Foreground = Theme.Brush(p.Text), CaretBrush = Theme.Brush(p.Accent), SelectionBrush = Theme.Brush(p.Accent), Padding = new Thickness(18, 12, 18, 12),
+                Foreground = Theme.Brush(p.Text), CaretBrush = Theme.Brush(p.AccentInk), SelectionBrush = Theme.Brush(p.Accent), Padding = new Thickness(18, 12, 18, 12),
                 VerticalContentAlignment = VerticalAlignment.Center };
             AutomationProperties.SetName(box, name);
             return box;
@@ -788,7 +788,7 @@ namespace SamsungCONNECT
             Palette p = Theme.Current;
             bool dark = p.IsDark;
             StackPanel row = Row(); row.Margin = new Thickness(16, 10, 16, 10);
-            row.Children.Add(Theme.Glyph(Glyphs.Sun, 20, dark ? p.SubText : p.Accent));
+            row.Children.Add(Theme.Glyph(Glyphs.Sun, 20, dark ? p.SubText : p.AccentInk));
             Grid inner = new Grid { Width = 64, Height = 32 };
             Border track = Theme.Inset(inner, 16); track.Margin = new Thickness(12, 0, 12, 0); track.VerticalAlignment = VerticalAlignment.Center;
             if (dark) track.Background = Theme.AccentSurface();
@@ -796,7 +796,7 @@ namespace SamsungCONNECT
                 HorizontalAlignment = dark ? HorizontalAlignment.Right : HorizontalAlignment.Left };
             inner.Children.Add(knob);
             row.Children.Add(track);
-            row.Children.Add(Theme.Glyph(Glyphs.Moon, 20, dark ? p.Accent : p.SubText));
+            row.Children.Add(Theme.Glyph(Glyphs.Moon, 20, dark ? p.AccentInk : p.SubText));
             Neu b = new Neu(row, 31, 6, true, false, 1.06, dark ? "Dark mode on. Switch to light" : "Light mode on. Switch to dark")
                 { Height = 62, Margin = new Thickness(18, 0, 0, 0), Tag = "theme", ToolTip = "Light / dark" };
             b.Click += delegate

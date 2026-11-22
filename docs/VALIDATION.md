@@ -8,7 +8,7 @@
 - Automated harness: **60 checks passed**. They cover the wireless and HDMI safety rules, the watchdog rule, native layouts, the streaming catalog, custom-tile address validation, saved-tile round trips, read-only display enumeration, and rendering of all five screens in light and dark mode. The rendered screens were inspected visually.
 - Logo download check (`build.ps1 -Logos`) from the build machine: 15 of 23 services returned a usable icon. ZEE5, SonyLIV and JioTV refuse automated or non-Indian requests, and a few others returned no usable icon. Those tiles show styled brand badges, and results on an Indian connection may differ.
 - Smoke run of the real executable with `--no-connect`: it started, created the tray icon and hotkeys, wrote the activity log, and a second launch handed off to the first instance and exited. The screen-saver flag was checked before and after. No display, power or startup setting was changed.
-- Production download is a single **109,568-byte EXE**, and it is **not Authenticode-signed**. Checksums are in [SHA256SUMS.txt](../SHA256SUMS.txt).
+- Production download is a single **110,080-byte EXE**, and it is **not Authenticode-signed**. Checksums are in [SHA256SUMS.txt](../SHA256SUMS.txt).
 
 ### Not performed
 

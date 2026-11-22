@@ -15,23 +15,30 @@ namespace SamsungCONNECT
     sealed class Palette
     {
         internal bool IsDark;
-        internal Color Base, LightShadow, DarkShadow, Text, SubText, Accent, AccentText, Ok, Danger;
+        // 60/30/10: Base = background (60%), Surface = raised tiles/cards/buttons (30%), Accent = highlights (10%).
+        // Text/SubText sit on Surface; BaseText/BaseSubText sit directly on Base.
+        // AccentInk is the accent tuned to stay readable as text or icons on Surface.
+        internal Color Base, Surface, LightShadow, DarkShadow, Text, SubText, BaseText, BaseSubText, Accent, AccentInk, AccentText, Ok, Danger;
         internal double LightOpacity, DarkOpacity;
     }
 
     static class Theme
     {
+        // Light: Cherry lacquer 60% / Milk porcelain 30% / Citrus lime 10%
         internal static readonly Palette Light = new Palette
         {
-            IsDark = false, Base = Hex("#E4E9F0"), LightShadow = Hex("#FFFFFF"), DarkShadow = Hex("#A3B1C6"),
-            Text = Hex("#2B3445"), SubText = Hex("#6A778C"), Accent = Hex("#5468FF"), AccentText = Colors.White,
-            Ok = Hex("#17A673"), Danger = Hex("#E0475B"), LightOpacity = 0.95, DarkOpacity = 0.75
+            IsDark = false, Base = Hex("#7B1626"), Surface = Hex("#F4EFE6"), LightShadow = Hex("#A3283C"), DarkShadow = Hex("#3E0710"),
+            Text = Hex("#4A0F1A"), SubText = Hex("#86606A"), BaseText = Hex("#FFF8EF"), BaseSubText = Hex("#EBC6C9"),
+            Accent = Hex("#C3E62F"), AccentInk = Hex("#5C7A00"), AccentText = Hex("#26300A"),
+            Ok = Hex("#2F8A3E"), Danger = Hex("#B3261E"), LightOpacity = 0.7, DarkOpacity = 0.85
         };
+        // Dark: Midnight graphite 60% / Lunar silver 30% / Signal orange 10%
         internal static readonly Palette Dark = new Palette
         {
-            IsDark = true, Base = Hex("#262A33"), LightShadow = Hex("#3A404D"), DarkShadow = Hex("#0F1115"),
-            Text = Hex("#E8ECF3"), SubText = Hex("#97A2B6"), Accent = Hex("#7D8BFF"), AccentText = Hex("#10131A"),
-            Ok = Hex("#3DD598"), Danger = Hex("#FF6B7D"), LightOpacity = 0.55, DarkOpacity = 0.9
+            IsDark = true, Base = Hex("#1C1F26"), Surface = Hex("#C5CAD3"), LightShadow = Hex("#323743"), DarkShadow = Hex("#08090C"),
+            Text = Hex("#1C1F26"), SubText = Hex("#525A68"), BaseText = Hex("#E4E7EC"), BaseSubText = Hex("#9AA1AE"),
+            Accent = Hex("#FF6A13"), AccentInk = Hex("#C94A00"), AccentText = Hex("#FFFFFF"),
+            Ok = Hex("#1E7D4F"), Danger = Hex("#B3261E"), LightOpacity = 0.8, DarkOpacity = 0.9
         };
         internal static Palette Current = Light;
         internal static string Mode = "System";
@@ -71,7 +78,7 @@ namespace SamsungCONNECT
         internal static Brush Surface(bool inset)
         {
             Palette p = Current;
-            Color a = Shade(p.Base, p.IsDark ? 0.035 : 0.25), b = Shade(p.Base, p.IsDark ? -0.12 : -0.05);
+            Color a = Shade(p.Surface, 0.4), b = Shade(p.Surface, -0.07);
             LinearGradientBrush brush = new LinearGradientBrush(inset ? b : a, inset ? a : b, new Point(0, 0), new Point(1, 1));
             brush.Freeze();
             return brush;
@@ -105,8 +112,7 @@ namespace SamsungCONNECT
             {
                 CornerRadius = new CornerRadius(radius), Background = Surface(true), Child = child,
                 BorderThickness = new Thickness(1.5),
-                BorderBrush = new LinearGradientBrush(Color.FromArgb((byte)(p.IsDark ? 140 : 90), p.DarkShadow.R, p.DarkShadow.G, p.DarkShadow.B),
-                    Color.FromArgb((byte)(p.IsDark ? 50 : 200), p.LightShadow.R, p.LightShadow.G, p.LightShadow.B), new Point(0, 0), new Point(1, 1))
+                BorderBrush = new LinearGradientBrush(Shade(p.Surface, -0.22), Shade(p.Surface, 0.6), new Point(0, 0), new Point(1, 1))
             };
         }
         // Rotating arc for "working on it".
@@ -163,8 +169,8 @@ namespace SamsungCONNECT
             CornerRadius corner = new CornerRadius(radius);
             darkShadow = new DropShadowEffect { Color = p.DarkShadow, Direction = 315, ShadowDepth = depth, BlurRadius = depth * 2.6, Opacity = p.DarkOpacity };
             lightShadow = new DropShadowEffect { Color = p.LightShadow, Direction = 135, ShadowDepth = depth, BlurRadius = depth * 2.6, Opacity = p.LightOpacity };
-            darkLayer = new Border { CornerRadius = corner, Background = Theme.Brush(p.Base), Effect = darkShadow };
-            lightLayer = new Border { CornerRadius = corner, Background = Theme.Brush(p.Base), Effect = lightShadow };
+            darkLayer = new Border { CornerRadius = corner, Background = Theme.Brush(p.Surface), Effect = darkShadow };
+            lightLayer = new Border { CornerRadius = corner, Background = Theme.Brush(p.Surface), Effect = lightShadow };
             face = new Border { CornerRadius = corner, Child = content, BorderThickness = new Thickness(3), BorderBrush = Brushes.Transparent };
             Children.Add(darkLayer); Children.Add(lightLayer); Children.Add(face);
             RenderTransformOrigin = new Point(0.5, 0.5); RenderTransform = scale;
@@ -185,7 +191,7 @@ namespace SamsungCONNECT
             Palette p = Theme.Current;
             bool sunk = pressed || selected;
             face.Background = primary && !pressed ? Theme.AccentSurface() : Theme.Surface(sunk);
-            face.BorderBrush = interactive && hot ? Theme.Brush(primary ? p.Text : p.Accent, primary ? 0.55 : 0.9) : Brushes.Transparent;
+            face.BorderBrush = interactive && hot ? Theme.Brush(primary ? p.Text : p.Accent, primary ? 0.6 : 1.0) : Brushes.Transparent;
             double d = sunk ? Math.Max(1, depth * 0.15) : hot ? depth * 1.35 : depth;
             Animate(darkShadow, d); Animate(lightShadow, d);
             double s = pressed ? 0.97 : hot ? hotScale : 1.0;

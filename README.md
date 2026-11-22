@@ -37,7 +37,7 @@ While you're on the TV, **closing the lid does nothing**, so you can shut the la
 
 ## Light and dark mode
 
-The soft neumorphic design comes in light and dark. Flip the **sun ◐ moon switch** at the top of the main screen (or select it and press Enter) to change instantly. To follow your Windows colour mode instead, choose **Settings → Appearance → System**.
+The soft neumorphic design uses a 60/30/10 colour split: **Light** is Cherry lacquer (background), Milk porcelain (tiles and cards) and Citrus lime (highlights). **Dark** is Midnight graphite, Lunar silver and Signal orange. Flip the **sun ◐ moon switch** at the top of the main screen (or select it and press Enter) to change instantly. To follow your Windows colour mode instead, choose **Settings → Appearance → System**.
 
 ## Keyboard shortcuts
 
