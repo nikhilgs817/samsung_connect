@@ -1,24 +1,27 @@
 # Validation record
 
-Date: October 22, 2026 (America/New_York).
+## Version 3.0 — November 22, 2026
 
-## Completed
+### Completed
+
+- Source compiled with the Windows .NET Framework compiler (C# 5, AnyCPU, optimized, framework-only references, embedded manifest).
+- Automated harness: **60 checks passed**. They cover the wireless and HDMI safety rules, the watchdog rule, native layouts, the streaming catalog, custom-tile address validation, saved-tile round trips, read-only display enumeration, and rendering of all five screens in light and dark mode. The rendered screens were inspected visually.
+- Logo download check (`build.ps1 -Logos`) from the build machine: 15 of 23 services returned a usable icon. ZEE5, SonyLIV and JioTV refuse automated or non-Indian requests, and a few others returned no usable icon. Those tiles show styled brand badges, and results on an Indian connection may differ.
+- Smoke run of the real executable with `--no-connect`: it started, created the tray icon and hotkeys, wrote the activity log, and a second launch handed off to the first instance and exited. The screen-saver flag was checked before and after. No display, power or startup setting was changed.
+- Production download is a single **111,104-byte EXE**, and it is **not Authenticode-signed**. Checksums are in [SHA256SUMS.txt](../SHA256SUMS.txt).
+
+### Not performed
+
+- Physical Samsung TV pairing (wireless) or HDMI switching on the user's laptop. The build machine is a desktop with three wired monitors and no laptop panel.
+- Live lid-close behaviour, power-plan restore after a real crash, or screen-lock prevention over long idle periods.
+- Chrome full-screen behaviour on the user's machine, including the F11 fallback when Chrome ignores `--start-fullscreen` for an already-running browser.
+- A full accessibility audit or every DPI and language configuration.
+
+Follow the [hardware validation steps](BUILDING.md#hardware-validation-before-relying-on-tv-mode) before relying on unattended switching.
+
+## Version 2.0 — October 22, 2026
 
 - Original source reviewed for privacy, command execution, persistence, UI Automation, display-switch safety, audio interop, and background/UI-thread handling.
-- Original 25,600-byte executable confirmed as a Windows PE. Fresh framework compilation of the supplied source produced the same complete file after normalizing only the parsed PE timestamp and sole 16-byte .NET module GUID. Resource and relocation sections matched as supplied.
-- Original and revised executable custom scans completed through Microsoft Defender. Antivirus and real-time protection were enabled; no matching SamsungCONNECT threat detection was reported. This records a local scan result, not a guarantee that the application is harmless.
-- Revised source compiled successfully with the Windows .NET Framework compiler, C# 5, AnyCPU, optimization, framework-only references, and the embedded manifest.
-- Automated harness: **26 checks passed**. This includes safety policy cases, selected TV path construction, native structure sizes, read-only Windows display enumeration, audio enumeration, and reproduction of the original tray-tooltip exception.
-- Ready, TV-mode, error, scaled-bound, and confirmation screens rendered from real WinForms controls. Ready, active, scaled, and confirmation previews were visually inspected. No physical TV was used for the screenshots.
-- Production download is a single **41,472-byte EXE**. Source and build files are included for inspection and rebuilding; they are not runtime sidecars.
-- The binary is **not Authenticode-signed**. Published checksums are in [SHA256SUMS.txt](../SHA256SUMS.txt).
-
-## Not performed
-
-- Physical Samsung TV pairing or automatic selection on the user's installed Windows Cast pane.
-- Live application of the selected TV-only path, physical laptop-panel power verification, or actual TV speaker playback.
-- Real connection-loss recovery, timeout rollback, startup-at-sign-in, or hotkey-conflict testing on the user's hardware.
-- A complete controller simulation, fuzzing, penetration test, independent review, or exhaustive malware analysis.
-- A full accessibility audit or testing of every DPI/Windows-language configuration.
-
-The automated harness never calls the display-switching API. The implementation contains cancellation, post-switch verification, a confirmation deadline, and a watchdog, but their end-to-end hardware behavior remains unverified. Follow the [hardware validation steps](BUILDING.md#hardware-validation-before-relying-on-tv-mode) before relying on unattended switching.
+- Original 25,600-byte executable confirmed as a Windows PE matching a fresh compilation of the supplied source after normalizing only the PE timestamp and module GUID.
+- Original and revised executables scanned with Microsoft Defender; no detection was reported. This is a local scan result, not a guarantee.
+- Automated harness: 26 checks passed. Physical TV pairing, live switching, connection-loss recovery and startup were not tested on the user's hardware.

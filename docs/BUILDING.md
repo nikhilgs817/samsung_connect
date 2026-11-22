@@ -28,14 +28,13 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\build.ps1
 
 Output: `build\SamsungCONNECT.exe`. Building does not replace the published executable at the repository root. After reviewing and validating a build, copy it to the root intentionally and update checksums before distributing it.
 
-The script invokes the framework compiler with C# 5, `-target:winexe`, `-platform:anycpu`, `-optimize+`, the embedded manifest, and these framework references:
+The script compiles every file in `src\` with C# 5, `-target:winexe`, `-platform:anycpu`, `-optimize+`, the embedded manifest, and these framework references:
 
-- `System.dll`
-- `System.Drawing.dll`
-- `System.Windows.Forms.dll`
-- `WPF\UIAutomationClient.dll`
-- `WPF\UIAutomationTypes.dll`
-- `WPF\WindowsBase.dll`
+- `System.dll`, `System.Drawing.dll`, `System.Windows.Forms.dll` (tray icon, hotkeys), `System.Xaml.dll`
+- `WPF\PresentationCore.dll`, `WPF\PresentationFramework.dll`, `WPF\WindowsBase.dll` (the UI)
+- `WPF\UIAutomationClient.dll`, `WPF\UIAutomationTypes.dll` (selecting the TV in Windows Cast)
+
+The UI is built in code (no XAML), so no build tasks beyond `csc.exe` are needed.
 
 The manifest is embedded inside the executable, so it is not a runtime sidecar. The app restricts native DLL resolution to System32 and requests `asInvoker` privileges.
 
@@ -45,9 +44,15 @@ The manifest is embedded inside the executable, so it is not a runtime sidecar. 
 .\build.ps1 -Test
 ```
 
-The test build selects a separate entry point. It does not run the production controller, change display topology, open Windows Cast, connect to a TV, write app settings, or register a global hotkey. It reads the current display/audio device list and renders transparent, offscreen test windows to PNG files under `build\`.
+The test build selects a separate entry point. It does not run the production controller, change display topology, open Windows Cast, connect to a TV, write app settings, change power settings, or register a global hotkey. It reads the current display/audio device list and renders every screen (connect, connecting, launcher, keep-TV confirmation, settings) in light and dark mode, off-screen, to PNG files under `build\`.
 
-Checks cover unrelated/wired device rejection, duplicate TV names, active external-monitor conflicts, missing/changed TV identity, the single-active-TV state, native structure sizes, selected-path construction, the original tooltip regression, read-only Windows display enumeration, and UI rendering.
+Checks cover wireless TV selection (unrelated/wired device rejection, duplicate names, other-monitor conflicts, changed identity, the TV-only state), HDMI selection (exactly one wired external screen; wired+wireless mixes refused), the shared watchdog rule, native structure sizes, selected-path construction, the streaming catalog (unique ids, https links, brand colours), custom-tile address validation (only http/https; quotes cannot reach the browser command line), saved-tile round trips, read-only display enumeration, and UI rendering.
+
+To check which service logos can be downloaded from your network (this writes them to the app's logo cache):
+
+```powershell
+.\build.ps1 -Logos
+```
 
 The tests require an interactive Windows display session. Headless runners or Remote Desktop configurations can fail the native display check without indicating a build failure in the application.
 
@@ -87,5 +92,8 @@ These steps require the real laptop and TV and remain unverified in the build en
 8. Check TV sound output manually. Device-name detection alone is insufficient.
 9. Test another external monitor, two similar TV names, missing TV permissions, and a TV name that does not match. The app should refuse an unsafe/ambiguous automatic switch.
 10. Test exit, sign-in startup, hotkey conflicts, normal/reduced screen sizes, and your actual display scaling settings.
+11. HDMI: plug in the TV, confirm the HDMI card shows "Found", connect, let the confirmation expire once, then keep TV mode. Unplug the cable and verify the laptop screen returns.
+12. Lid: in TV mode, close the lid and confirm playback continues. Return to the laptop screen and check `powercfg /q SCHEME_CURRENT SUB_BUTTONS LIDACTION` shows your original values.
+13. Launcher: open Netflix and YouTube from the TV, confirm they open full screen in Chrome while signed in, and that Ctrl+Alt+H and Resume work. Leave the app idle past your screen-off and lock timeouts.
 
 Use Win+P > PC screen only if the app cannot recover. No application timer can guarantee recovery from forced process termination, an OS/graphics-driver failure, or an unavailable internal panel.

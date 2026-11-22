@@ -1,174 +1,124 @@
 # SamsungCONNECT
 
-A portable Windows 11 utility that connects your laptop to a compatible Samsung TV wirelessly, then makes the TV your only active screen. No HDMI cable, installer, account, or additional app packages are required.
+Turn your Windows laptop into a smart-TV box. Connect to your TV wirelessly or with an HDMI cable, then pick Netflix, Prime Video, JioHotstar, YouTube and other Indian streaming services from a big-screen home screen. You can drive it all with a wireless mouse and keyboard.
 
-**[Download SamsungCONNECT.exe](https://github.com/nikhilgs817/samsung_connect/raw/refs/heads/main/SamsungCONNECT.exe)** · [Security review](docs/SECURITY-REVIEW.md) · [Build from source](docs/BUILDING.md)
+[Download](SamsungCONNECT.exe) · [Build from source](docs/BUILDING.md) · [Security review](docs/SECURITY-REVIEW.md) · [Changelog](CHANGELOG.md)
 
-Version 2.0 adds a control window and addresses security and reliability issues found in the original Kimi-generated implementation. The original source is retained in [review/original](review/original/SamsungCONNECT.cs) for comparison; the executable at the repository root is the updated version.
+![The TV home screen in light mode](docs/launcher-light.png)
 
-![SamsungCONNECT control window](docs/dashboard.png)
+## How it works
 
-*Control-window preview rendered from the real WinForms UI without connecting a TV.*
+**Step 1 — connect.** Open the app on your laptop and choose how the TV is connected:
 
-## What the app does
+| Wireless (Miracast) | HDMI cable |
+| --- | --- |
+| Finds your TV by name, opens Windows Cast, and selects it for you. Accept the prompt on the TV. | Detects the cable and switches Windows to "second screen only" (the same as Win+P). |
 
-- Opens Windows Cast, the same wireless-display interface as **Win+K**.
-- Attempts to select a uniquely matching TV using Windows UI Automation. It does not select unrelated devices when no name matches.
-- Verifies a named, active Miracast display through Windows' display configuration API before requesting TV-only mode.
-- Requests a display layout containing only that TV, disabling the laptop's internal display in Windows. This is not a dimming feature; hardware and driver behavior determines the panel's actual power state.
-- Checks whether a TV-like audio device is available. **It does not change or verify the default audio output.** You may need to select TV speakers in Windows once.
-- Gives you **15 seconds to keep TV mode**. If you do not confirm, it attempts to restore the laptop screen.
-- Monitors the selected display every 2.5 seconds. Two consecutive missing, changed, or unreadable states trigger a laptop-screen restore attempt.
-- Keeps controls available in the system tray, with an optional Windows sign-in startup setting.
+![The connect screen](docs/connect-light.png)
 
-The app uses Windows' built-in Miracast engine; it does not implement a casting protocol or connect through a cloud service. Windows may briefly mirror or extend the desktop while establishing a cast session before the app requests TV-only mode.
+Before anything is final, the TV shows **"Can you see this on your TV?"** with a 15-second countdown. Press **Enter** (or click **Keep TV mode**) to keep it. If you do nothing, the laptop screen comes back on by itself, so a wrong TV or a black screen can't leave you stuck.
+
+![The keep-TV-mode confirmation in dark mode](docs/confirm-dark.png)
+
+**Step 2 — watch.** The laptop screen turns off and the home screen fills the TV:
+
+- Big tiles for **Netflix, Prime Video, JioHotstar, YouTube, ZEE5, SonyLIV, JioTV, aha**, regional services (**Sun NXT, ETV Win, hoichoi, Manorama Max, Chaupal, ShemarooMe**), plus **Apple TV+, Amazon MX Player, Lionsgate Play, Airtel Xstream, Tata Play Binge, FanCode**, and music (**YouTube Music, Spotify, JioSaavn**).
+- Click a tile, or move with the **arrow keys** and press **Enter**. The service opens as a full-screen **Chrome** app window that uses your normal Chrome profile, so you stay signed in.
+- Close the show with **Alt+F4**, or press **Ctrl+Alt+H** to jump back to the home screen. A **Resume** button takes you back to what you were watching.
+- **Add more sites** with the **+** button in the top bar, the "Add a site" tile at the end of the list, or **Settings → Add a site**. Type a name and any web address (for example `waves.pb.gov.in`) to get your own tile. To remove a site you added, open **Settings → Your sites** and click **Remove**, or right-click its tile (or select it and press the **Menu** key). Built-in tiles can be hidden the same way.
+
+![The TV home screen in dark mode](docs/launcher-dark.png)
+
+## Always awake
+
+While the app is open, your laptop does not sleep, turn off its screen, start the screen saver, or lock. This stops when you exit.
+
+While you're on the TV, **closing the lid does nothing**, so you can shut the laptop and use your wireless keyboard and mouse. Your normal lid setting comes back as soon as you return to the laptop screen or exit. If the laptop crashes or loses power first, the next start puts it back. You can turn this off in Settings.
+
+## Light and dark mode
+
+The soft neumorphic design uses a 60/30/10 colour split: **Light** is Cherry lacquer (background), Milk porcelain (tiles and cards) and Citrus lime (highlights). **Dark** is Midnight graphite, Lunar silver and Signal orange. Flip the **sun ◐ moon switch** at the top of the main screen (or select it and press Enter) to change instantly. To follow your Windows colour mode instead, choose **Settings → Appearance → System**.
+
+## Keyboard shortcuts
+
+| Keys | What they do |
+| --- | --- |
+| Arrow keys + Enter | Move between tiles and buttons, open the selected one |
+| Ctrl+Alt+H | Bring the home screen to the front (from inside Netflix, YouTube, …) |
+| Ctrl+Alt+T | Back to the laptop screen. Press again to reconnect the way you did last time |
+| 1 / 2 | On the connect screen: Wireless / HDMI |
+| Esc | Close a dialog, or cancel a connection in progress |
+| Win+P → PC screen only | Windows' own emergency way back to the laptop screen |
+
+## Settings
+
+![Settings](docs/settings-light.png)
+
+- **TV name (for wireless):** the name your TV shows in Win+K, for example `[TV] Samsung 7 Series (43)`. Only a TV whose name contains it is selected. If two TVs match, the app refuses to guess.
+- **Appearance:** System, Light or Dark.
+- **Keep playing with the lid closed:** on by default.
+- **Connect automatically when the app opens:** reuses your last method (wireless or HDMI).
+- **Start with Windows.**
+- **Your sites:** every site you added, with a Remove button.
+- **Add a site, Refresh logos, Show hidden tiles, Open Windows Cast.**
 
 ## Requirements
 
-- Windows 11 on a laptop with a built-in display and Miracast-capable Wi-Fi/graphics hardware and drivers.
-- A Samsung TV that supports **Miracast / Screen Mirroring** and accepts connections from the laptop. Tizen alone does not guarantee compatibility.
-- Wi-Fi enabled on the laptop and the TV ready to receive a wireless-display connection. For the intended home setup, start with both devices on the same home network; Miracast itself uses Wi-Fi Direct.
-- The Windows .NET Framework 4.x runtime and Windows UI Automation assemblies. The app has no NuGet dependencies.
-- A local interactive desktop session. Remote Desktop sessions and headless machines are not supported targets.
-
-First verify that **Win+K** can connect to the TV manually. SamsungCONNECT cannot add Miracast support to incompatible hardware. Microsoft documents the manual procedure in [Cast to an external display](https://support.microsoft.com/en-us/windows/hardware/display-graphics/screen-mirroring-and-projecting-to-your-pc-or-wireless-display).
+- Windows 10 or 11 with .NET Framework 4.x (built in).
+- **Google Chrome** for the full-screen app windows. Without Chrome the app uses Microsoft Edge, and without either it opens your default browser.
+- For wireless: a laptop and TV that support Miracast (Win+K lists the TV). For HDMI: an HDMI port, or USB-C/DisplayPort with an adapter.
+- Run it at your desk on a normal Windows sign-in, not over Remote Desktop.
 
 ## Install
 
-1. Use the **Download SamsungCONNECT.exe** link above. Alternatively, open `SamsungCONNECT.exe` in this repository and choose **Download raw file**, or download the repository ZIP and extract it first.
-2. Put the executable in a permanent folder you own, such as `Documents\SamsungCONNECT`. Only this one executable is needed to run the app; the source, build files, and guide are optional.
-3. Optionally verify the file against [SHA256SUMS.txt](SHA256SUMS.txt):
+1. Download [SamsungCONNECT.exe](SamsungCONNECT.exe) and put it in a folder you keep, for example `C:\Apps\SamsungCONNECT`.
+2. Optional: check the file against [SHA256SUMS.txt](SHA256SUMS.txt):
 
    ```powershell
-   Get-FileHash -Algorithm SHA256 "$env:USERPROFILE\Documents\SamsungCONNECT\SamsungCONNECT.exe"
+   Get-FileHash .\SamsungCONNECT.exe -Algorithm SHA256
    ```
 
-4. Double-click the executable. It opens the control window and **automatically starts a connection attempt**.
+3. Double-click it. The app isn't code-signed, so Windows SmartScreen may warn you. Choose **More info → Run anyway** only if the checksum matches. It runs with normal user rights and never asks for administrator access.
 
-The binary is unsigned, so Windows may show a publisher/reputation warning. Verify its origin and checksum before deciding whether to run it. Do not disable antivirus protection or run the app as administrator. Its embedded manifest requests ordinary user privileges.
+## First wireless setup (about 3 minutes)
 
-**Important:** Review the [security findings and testing limits](docs/SECURITY-REVIEW.md) before relying on automatic switching. TV pairing, live topology changes, and connection-loss recovery have not been tested against a physical Samsung TV during this build.
+1. Turn on the TV. Press **Win+K** on the laptop once and note the TV's exact name.
+2. In SamsungCONNECT, open **Settings**, type the name and click **Save**.
+3. Click **Wireless**. When the TV asks for permission, accept it with the TV remote. Choosing "always allow" on the TV makes later connections faster.
+4. Press **Enter** on the TV when it asks to keep TV mode.
 
-## First-time TV setup
-
-1. Turn on the TV. If necessary, open its **Screen Mirroring**, **Screen Sharing**, or wireless-cast source. Exact menus depend on the model.
-2. Press **Win+K** on the laptop and note the TV's displayed name. Confirm that the TV you select is yours.
-3. If SamsungCONNECT has already started searching, use **Laptop screen / cancel** to stop its attempt before changing settings.
-4. In **Your TV**, enter the full unique TV name, or a unique part of it, and click **Save TV name**. The default is `SAMSUNG`; matching ignores capitalization. Saving the name does not itself connect.
-5. Click **Connect & use TV**. If automatic selection is unavailable, select the correct TV manually in Win+K while the app waits.
-6. Approve the TV's pairing/sharing prompt. Use an “always allow” option only if you trust the laptop.
-7. Wait for the app to verify the display. When the TV becomes the only screen, click **Keep TV mode** within 15 seconds. Otherwise the app restores the laptop.
-8. If sound remains on the laptop, open **Windows Settings > System > Sound**, select the TV under output devices, and test playback. Device detection in the app is advisory.
-
-The full attempt can take roughly three minutes: up to 60 seconds of discovery, up to 90 additional seconds for manual connection/display confirmation, up to 15 seconds for audio detection, and the final screen confirmation.
-
-## Everyday use
-
-Turn on the TV, then launch SamsungCONNECT. The app attempts the connection immediately. Once the TV-only layout is verified, use the 15-second confirmation to keep it.
-
-You can close the control window with **X** to leave the app running in the tray. Click its monitor icon near the Windows clock to reopen it; the icon is blue in TV mode and gray otherwise. Hidden tray icons may be under the **^** arrow.
-
-- **Connect & use TV:** Runs the full connection and verification sequence. It is disabled during an attempt or while TV mode is active.
-- **Laptop screen / cancel:** Cancels the app's attempt and requests the laptop-only layout. It remains available during a connection attempt. Windows may still finish an already-started wireless session; disconnect through Win+K if needed.
-- **Open Windows Cast:** Opens Win+K for manual pairing, selection, or troubleshooting.
-- **Disconnect TV...:** Restores the laptop first, then opens Windows Cast. Select **Disconnect** beside your intended TV. This final selection is deliberately manual.
-- **Exit & restore laptop:** Restores the laptop if the app is switching or using TV mode, then closes the app. If the restore API reports failure, the app remains open and gives recovery instructions.
-- **Save TV name:** Saves the match string for future attempts. Return to the laptop before editing it.
-
-The tray's right-click menu also provides connect, laptop/cancel, disconnect, and exit controls.
-
-### Keyboard shortcut
-
-**Ctrl+Alt+T** starts a verified connection attempt when idle. In TV mode or during an attempt, it cancels and requests the laptop screen instead. If another app owns this hotkey, the activity box tells you; use the buttons or tray menu.
-
-If SamsungCONNECT is unavailable, use Windows' own **Win+P > PC screen only** to recover the laptop screen.
-
-### Start with Windows
-
-Select **Connect automatically when I sign in to Windows**. This saves a per-user startup entry that launches the current executable with `--tray` and immediately attempts the connection. The TV-mode confirmation still appears after a successful switch.
-
-Keep the executable in the same location. If you move it, turn this option off and on from the new location to update the saved path. Clear the checkbox to disable automatic startup.
-
-### Optional launch modes
-
-```powershell
-.\SamsungCONNECT.exe --no-connect        # Open controls without an automatic connection attempt
-.\SamsungCONNECT.exe --tray              # Start in the tray and attempt connection
-.\SamsungCONNECT.exe --tray --no-connect # Tray only, without an automatic attempt
-```
-
-Only one instance runs per Windows session. Launching it again is a no-op; open the existing tray icon instead. Exit the original Kimi version before starting this one.
+If sound still plays from the laptop, pick the TV in Windows sound settings once. Windows remembers it.
 
 ## Troubleshooting
 
-### The TV does not appear
+- **TV not found (wireless):** check the TV name in Settings, make sure Wi-Fi is on and the TV's Screen Mirroring is enabled, then try Win+K by hand.
+- **"More than one external display":** HDMI mode only switches when exactly one external screen is connected. Unplug other monitors.
+- **Black TV screen:** wait 15 seconds and the laptop screen returns by itself. You can also press Ctrl+Alt+T, or Win+P → PC screen only.
+- **TV turned off while watching:** after about 5 seconds the laptop screen comes back. Press Ctrl+Alt+T to reconnect.
+- **A logo is missing:** the tile shows a styled brand badge instead. Some sites block automated downloads. Try **Settings → Refresh logos** later.
+- **Activity log:** `%LOCALAPPDATA%\SamsungCONNECT\activity.log`
 
-Check the TV power, its screen-mirroring source, laptop Wi-Fi, and the TV's pairing prompt. Try connecting with **Win+K** independently of this app. If manual casting fails, resolve that Windows/TV connection first.
+## Privacy and what the app changes
 
-### The TV is listed, but automatic selection does nothing
+- **Network:** the only network use is downloading each service's icon **from that service's own website** (HTTPS only), on first run, when you add a tile, or when you click Refresh logos. Icons are re-encoded and cached in `%LOCALAPPDATA%\SamsungCONNECT\logos`. Nothing about you is sent, and there is no telemetry and no updater.
+- **Streaming:** sites open in your own Chrome. The app never sees your accounts or passwords.
+- **Settings** live in `HKCU\Software\SamsungCONNECT`. **Start with Windows** adds a `SamsungCONNECT` value under `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`.
+- **Power:** keep-awake is a temporary request that Windows drops when the app closes. The screen saver is paused for this sign-in session only. The lid setting is changed only in TV mode, and the original value is saved first so it can be restored.
 
-Use **Open Windows Cast** and select it manually. Automation depends on the current Windows shell and its accessible controls. English pane titles (`Cast`, `Connect`, `Cast to`) are recognized; other languages or newer Windows layouts may require manual selection. The app only automates recognized Windows shell processes in protected system locations, and it does not use physical mouse clicks as a fallback.
+To uninstall, turn off **Start with Windows**, exit the app, delete the EXE, and optionally run:
 
-### “More than one device matches” or the TV is not verified
+```powershell
+Remove-Item -Path 'HKCU:\Software\SamsungCONNECT' -Recurse
+```
 
-Save a more specific name. Two matching TVs, including two with identical names, are rejected. The connected display must also expose a matching friendly name and the Miracast connector type through Windows. If your driver reports a generic/different display name or another connector type, the app will refuse automatic screen switching; use **Win+K** and **Win+P** manually.
+```powershell
+Remove-Item -Path "$env:LOCALAPPDATA\SamsungCONNECT" -Recurse
+```
 
-Display names are not authentication. Check the physical TV and pairing prompt before sharing sensitive information.
+## Source
 
-### Another external monitor blocks TV mode
+- `src/` — the app: `Program.cs` (start-up), `Controller.cs` (connect flows, watchdog, tray, hotkeys), `Display.cs` (safety rules and Windows display APIs), `Power.cs` (keep-awake and lid), `Services.cs` (streaming catalog, settings, logo download, Chrome launcher), `Theme.cs` (neumorphic controls), `Ui.cs` (screens).
+- `tests/SafetyTests.cs` — 60 automated checks plus screenshots of every screen. These checks never change your display, power or startup settings.
+- `build.ps1` — builds with the compiler that ships with Windows. No Visual Studio or NuGet. See [docs/BUILDING.md](docs/BUILDING.md).
 
-Disconnect other external monitors and retry. The app is intended for one laptop panel plus one TV and rejects ambiguous active external-display setups.
-
-### The laptop screen comes back after switching
-
-Click **Keep TV mode** within the 15-second countdown. If Windows cannot verify the TV-only layout, or the connection changes, the app attempts to restore the laptop. Check the activity box and retry after the TV connection stabilizes.
-
-### The picture works, but there is no TV sound
-
-Select the TV in Windows Sound settings and check TV volume/mute. The app only enumerates legacy audio device names; those names may be truncated, and detection does not prove the default output or working playback.
-
-### The screen stays blank or the app stops responding
-
-Try **Ctrl+Alt+T** while the app is running, or **Win+P > PC screen only** independently. The timer, cancellation, and watchdog are best-effort safeguards; they cannot recover from every driver failure, process crash, forced termination, or unavailable laptop panel. Closing the laptop lid may trigger Windows sleep settings; keep it open unless you have configured and tested lid behavior yourself.
-
-## Settings, privacy, and uninstalling
-
-The application source contains no analytics, updater, account login, credential access, download requests, or application-owned network client. Windows manages the wireless display connection. The activity log stays in memory and is not written to a file.
-
-Only these app settings are written, for the current user:
-
-- `HKEY_CURRENT_USER\Software\SamsungCONNECT`, value `TVName`.
-- `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run`, value `SamsungCONNECT`, when startup is enabled. The executable path is quoted.
-
-Windows may separately remember TV pairing and display/audio preferences.
-
-To uninstall:
-
-1. Clear **Connect automatically when I sign in to Windows**.
-2. Use **Disconnect TV...** and disconnect the TV in Windows Cast if desired.
-3. Choose **Exit & restore laptop**.
-4. Delete `SamsungCONNECT.exe` and any optional repository files.
-5. Optionally remove the `TVName` setting. If the EXE was already deleted, the following removes only this app's registry key and startup value:
-
-   ```powershell
-   Remove-ItemProperty -LiteralPath 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run' -Name 'SamsungCONNECT' -ErrorAction SilentlyContinue
-   Remove-Item -LiteralPath 'HKCU:\Software\SamsungCONNECT' -ErrorAction SilentlyContinue
-   ```
-
-To update, exit the running app, replace the executable with a newer verified build in the same folder, and launch it. There is no automatic updater.
-
-## Source, build, and validation
-
-- [SamsungCONNECT.cs](SamsungCONNECT.cs): Application code in one C# 5 source file.
-- [app.manifest](app.manifest): Embedded Windows compatibility, ordinary-user privilege, and DPI settings.
-- [build.ps1](build.ps1): Builds with Windows' .NET Framework compiler; no Visual Studio or NuGet restore.
-- [tests/SafetyTests.cs](tests/SafetyTests.cs): Safety policy, interop-layout, read-only native API, and UI rendering checks.
-- [Build and testing guide](docs/BUILDING.md): Exact steps, output paths, and hardware validation checklist.
-- [Security review](docs/SECURITY-REVIEW.md): Findings in the original app, changes made, and remaining risks.
-- [SHA256SUMS.txt](SHA256SUMS.txt): Checksums for the distributed executable and source.
-
-The build and automated checks passed on Windows. The original EXE was compared with a local rebuild, and its bytes matched after normalizing only the PE timestamp and .NET module identifier. That comparison establishes correspondence with the reviewed source, not proof that software is risk-free.
-
-Before reporting a bug, include your Windows version, TV model, whether manual Win+K casting works, and the relevant activity message. Avoid including private screen contents or device information you do not want public.
-
-This is an independent utility, not an official Samsung or Microsoft product. The original implementation was built using Kimi; version 2.0 was reviewed and revised with Codex. No third-party licensing terms have been assigned by this repository; the owner can choose a license separately.
+Not affiliated with Samsung or any streaming service. Service names and logos belong to their owners; logos are fetched from their own websites and shown only to label the links.

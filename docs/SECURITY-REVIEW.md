@@ -96,3 +96,14 @@ Remaining limitations:
 - Physical TV pairing, successful live TV-only application, timeout rollback, watchdog behavior during a real link loss, and actual speaker playback remain unverified.
 
 The outcome is a more constrained and testable implementation, with the remaining hardware and operating-system assumptions stated explicitly.
+
+## Version 3.0 addendum (November 22, 2026)
+
+Version 3.0 adds new attack surface. Each new surface is listed with the limits that apply to it:
+
+- **Network (logo download):** HTTPS only, including after redirects (at most 5). Pages are capped at 1.5 MB, manifests at 300 KB and images at 2 MB. Requests time out after 12 seconds. Images are decoded by Windows' own codecs, size-checked (≤4096 px, near-square), scaled to ≤256 px and **re-encoded as PNG** before caching. Cached files are named by a hash of the service id, never by remote names. No cookies, accounts or user data are sent. Failed sites are retried at most every 3 days.
+- **Launching the browser:** URLs come from the built-in catalog or from a user-typed address. A typed address must parse as an absolute `http`/`https` URI with a dotted host. Only `Uri.AbsoluteUri` (percent-encoded, so it can't contain a `"`) is placed in the `--app="…"` argument, so a tile can't inject extra Chrome switches (tested). The browser path comes from the `App Paths` registry key or the standard install folder.
+- **Window automation:** after launch, the app looks only for *new* visible `Chrome_WidgetWin_1` windows owned by the chosen browser's process. It sends F11 only if that window is in the foreground and not yet full screen. Opening the next tile posts `WM_CLOSE` to the previous app window only.
+- **Power settings:** `SetThreadExecutionState` is released by Windows when the process exits. The screen saver is paused with `SystemParametersInfo` without `SPIF_UPDATEINIFILE`, so it is session-only. The lid action is written to the **active power plan only while in TV mode**, after saving the original AC/DC values and plan GUID to `HKCU\Software\SamsungCONNECT`. It is restored on returning to the laptop, on exit, on sign-out, and at the next start after a crash.
+- **Privileges:** unchanged. The app runs as the invoking user (`asInvoker`) with no elevation.
+- **Residual risks:** a malicious or compromised streaming website could serve a hostile image to the Windows imaging codecs. That is the same exposure as a browser tab, but outside the browser sandbox. Use **Refresh logos** only when you want new icons, or delete the logo cache to stop showing them. On machines that use a corporate "machine inactivity limit" policy, the lock is enforced by policy and is not prevented.
