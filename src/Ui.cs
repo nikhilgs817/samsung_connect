@@ -145,7 +145,7 @@ namespace SamsungCONNECT
                 confirmDetail = Theme.Text(ConfirmText(), 20, FontWeights.Normal, p.SubText);
                 confirmDetail.TextAlignment = TextAlignment.Center; confirmDetail.Margin = new Thickness(0, 10, 0, 0); confirmDetail.MaxWidth = 640;
                 body.Children.Add(confirmDetail);
-                confirmSeconds = Theme.Text(confirmLeft.ToString(), 64, FontWeights.Bold, p.AccentInk);
+                confirmSeconds = Theme.Text(confirmLeft.ToString(), 64, FontWeights.Bold, p.Text);
                 confirmSeconds.HorizontalAlignment = HorizontalAlignment.Center; confirmSeconds.VerticalAlignment = VerticalAlignment.Center;
                 Border dial = Theme.Inset(confirmSeconds, 80); dial.Width = 160; dial.Height = 160; dial.Margin = new Thickness(0, 30, 0, 34);
                 dial.HorizontalAlignment = HorizontalAlignment.Center;
@@ -412,7 +412,8 @@ namespace SamsungCONNECT
             text.Children.Add(cancel);
             pageDefault = cancel;
             body.Children.Add(text);
-            return new Neu(body, 38, 12, false) { VerticalAlignment = VerticalAlignment.Top };
+            Neu.SitOnSurface(body);
+            return new Neu(body, 38, 12, false) { VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 0, 40) };
         }
 
         // ---------- Launcher (TV, 1920x1080 reference) ----------
@@ -592,6 +593,7 @@ namespace SamsungCONNECT
         }
         Neu Card(UIElement body, double width)
         {
+            Neu.SitOnSurface(body);
             Border pad = new Border { Child = body, Padding = new Thickness(52, 46, 52, 44) };
             return new Neu(pad, 40, 16, false) { Width = width, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
         }
@@ -686,7 +688,7 @@ namespace SamsungCONNECT
                 body.Children.Add(Note("Shows open full screen in " + app.BrowserName + " with your usual logins. Logos come from each service's own website."));
 
                 ScrollViewer scroll = new ScrollViewer { Content = new Border { Child = body, Padding = new Thickness(8, 8, 18, 8) }, VerticalScrollBarVisibility = ScrollBarVisibility.Hidden,
-                    MaxHeight = 640, Focusable = false };
+                    MaxHeight = 560, Focusable = false };
                 close.Tag = "default";
                 return Card(scroll, 900);
             }, null);
@@ -775,7 +777,7 @@ namespace SamsungCONNECT
         // ---------- Small builders ----------
 
         static StackPanel Row() { return new StackPanel { Orientation = Orientation.Horizontal }; }
-        static TextBlock Hint(string text) { TextBlock t = Theme.Text(text, 15, FontWeights.Normal, Theme.Current.BaseSubText); t.HorizontalAlignment = HorizontalAlignment.Right; return t; }
+        static TextBlock Hint(string text) { TextBlock t = Theme.Text(text, 17, FontWeights.Normal, Theme.Current.BaseSubText); t.HorizontalAlignment = HorizontalAlignment.Right; return t; }
         static TextBlock Label(string text) { TextBlock t = Theme.Text(text.ToUpperInvariant(), 15, FontWeights.Bold, Theme.Current.SubText); t.Margin = new Thickness(4, 30, 0, 14); return t; }
         static TextBlock Note(string text) { TextBlock t = Theme.Text(text, 16, FontWeights.Normal, Theme.Current.SubText); t.Margin = new Thickness(4, 12, 0, 0); return t; }
 
@@ -826,6 +828,7 @@ namespace SamsungCONNECT
             inner.Children.Add(knob);
             row.Children.Add(track);
             row.Children.Add(Theme.Glyph(Glyphs.Moon, 20, dark ? p.AccentInk : p.SubText));
+            Neu.SitOnSurface(row);
             Neu b = new Neu(row, 31, 6, true, false, 1.06, dark ? "Dark mode on. Switch to light" : "Light mode on. Switch to dark")
                 { Height = 62, Margin = new Thickness(18, 0, 0, 0), Tag = "theme", ToolTip = "Light / dark" };
             b.Click += delegate

@@ -79,6 +79,8 @@ namespace SamsungCONNECT
         {
             Palette p = Current;
             Color a = Shade(p.Surface, 0.4), b = Shade(p.Surface, -0.07);
+            // Wells are flatter than raised faces so text fields read as one even surface.
+            if (inset) { a = Shade(p.Surface, 0.12); b = Shade(p.Surface, -0.08); }
             LinearGradientBrush brush = new LinearGradientBrush(inset ? b : a, inset ? a : b, new Point(0, 0), new Point(1, 1));
             brush.Freeze();
             return brush;
@@ -112,7 +114,7 @@ namespace SamsungCONNECT
             {
                 CornerRadius = new CornerRadius(radius), Background = Surface(true), Child = child,
                 BorderThickness = new Thickness(1.5),
-                BorderBrush = new LinearGradientBrush(Shade(p.Surface, -0.22), Shade(p.Surface, 0.6), new Point(0, 0), new Point(1, 1))
+                BorderBrush = new LinearGradientBrush(Shade(p.Surface, -0.2), Shade(p.Surface, 0.5), new Point(0, 0), new Point(1, 1))
             };
         }
         // Rotating arc for "working on it".
@@ -202,6 +204,25 @@ namespace SamsungCONNECT
         static void Animate(DropShadowEffect e, double d)
         {
             e.BeginAnimation(DropShadowEffect.ShadowDepthProperty, new DoubleAnimation(d, TimeSpan.FromMilliseconds(150)));
+        }
+        // Controls placed on a porcelain/silver card cast neutral shadows (white highlight, surface-tinted shade)
+        // instead of the background-coloured ones, so nothing looks muddy or red-tinted.
+        internal void SitOnSurface()
+        {
+            Palette p = Theme.Current;
+            darkShadow.Color = Theme.Shade(p.Surface, -0.45); darkShadow.Opacity = 0.55;
+            lightShadow.Color = Colors.White; lightShadow.Opacity = 0.95;
+        }
+        internal static void SitOnSurface(object root)
+        {
+            DependencyObject node = root as DependencyObject;
+            if (node == null) return;
+            foreach (object child in LogicalTreeHelper.GetChildren(node))
+            {
+                Neu neu = child as Neu;
+                if (neu != null) neu.SitOnSurface();
+                SitOnSurface(child);
+            }
         }
         void SetHot(bool value) { if (hot != value) { hot = value; Paint(); } }
 
