@@ -25,7 +25,7 @@ Before anything is final, the TV shows **"Can you see this on your TV?"** with a
 - Big tiles for **Netflix, Prime Video, JioHotstar, YouTube, ZEE5, SonyLIV, JioTV, aha**, regional services (**Sun NXT, ETV Win, hoichoi, Manorama Max, Chaupal, ShemarooMe**), plus **Apple TV+, Amazon MX Player, Lionsgate Play, Airtel Xstream, Tata Play Binge, FanCode**, and music (**YouTube Music, Spotify, JioSaavn**).
 - Click a tile, or move with the **arrow keys** and press **Enter**. The service opens as a full-screen **Chrome** app window that uses your normal Chrome profile, so you stay signed in.
 - Close the show with **Alt+F4**, or press **Ctrl+Alt+H** to jump back to the home screen. A **Resume** button takes you back to what you were watching.
-- **Add a site** at the end of the list creates your own tile for any web address. Right-click a tile (or press the **Menu** key) to hide or remove it.
+- **Add more sites** with the **+** button in the top bar, the "Add a site" tile at the end of the list, or **Settings → Add a site**. Type a name and any web address (for example `waves.pb.gov.in`) to get your own tile. Right-click a tile (or press the **Menu** key) to hide or remove it.
 
 ![The TV home screen in dark mode](docs/launcher-dark.png)
 
@@ -59,7 +59,7 @@ The soft neumorphic design comes in light and dark. The sun/moon button cycles *
 - **Keep playing with the lid closed:** on by default.
 - **Connect automatically when the app opens:** reuses your last method (wireless or HDMI).
 - **Start with Windows.**
-- **Refresh logos, Show hidden tiles, Open Windows Cast.**
+- **Add a site, Refresh logos, Show hidden tiles, Open Windows Cast.**
 
 ## Requirements
 

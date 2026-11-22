@@ -445,6 +445,7 @@ namespace SamsungCONNECT
             resumeChip = new Neu(rc, 28, 6, true, true, 1.05, "Resume") { Margin = new Thickness(0, 0, 26, 0), Tag = "resume", Visibility = Visibility.Collapsed, VerticalAlignment = VerticalAlignment.Center };
             resumeChip.Click += app.Resume;
             right.Children.Add(resumeChip);
+            right.Children.Add(IconButton(Glyphs.Add, "Add a site", "addsite", ShowAddTile));
             right.Children.Add(IconButton(Glyphs.ForMode(Theme.Mode), "Theme: " + Theme.Mode, "theme", CycleTheme));
             right.Children.Add(IconButton(Glyphs.Settings, "Settings", "settings", ShowSettings));
             right.Children.Add(IconButton(Glyphs.Laptop, "Back to laptop screen", "laptop", app.BackToLaptop));
@@ -650,7 +651,8 @@ namespace SamsungCONNECT
                 Neu refresh = Pill(Glyphs.Auto, "Refresh logos", false, delegate { app.RefreshLogos(); Toast("Downloading logos again."); });
                 Neu unhide = Pill(Glyphs.Home, "Show hidden tiles", false, delegate { app.SaveHiddenTiles(new List<string>()); Toast("All tiles are back."); if (launcher) Build(); });
                 Neu cast = Pill(Glyphs.Cast, "Open Windows Cast", false, app.OpenCast);
-                foreach (Neu b in new[] { refresh, unhide, cast }) { b.Margin = new Thickness(0, 0, 20, 16); tileActions.Children.Add(b); }
+                Neu addSite = Pill(Glyphs.Add, "Add a site", true, ShowAddTile);
+                foreach (Neu b in new[] { addSite, refresh, unhide, cast }) { b.Margin = new Thickness(0, 0, 20, 16); tileActions.Children.Add(b); }
                 body.Children.Add(tileActions);
                 body.Children.Add(Note("Shows open full screen in " + app.BrowserName + " with your usual logins. Logos come from each service's own website."));
 
