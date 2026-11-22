@@ -316,7 +316,7 @@ namespace SamsungCONNECT
             brand.Children.Add(names);
             header.Children.Add(brand);
             StackPanel tools = Row(); Grid.SetColumn(tools, 1); tools.VerticalAlignment = VerticalAlignment.Center;
-            tools.Children.Add(IconButton(Glyphs.ForMode(Theme.Mode), "Theme: " + Theme.Mode, "theme", CycleTheme));
+            tools.Children.Add(ThemeSwitch());
             tools.Children.Add(IconButton(Glyphs.Settings, "Settings", "settings", ShowSettings));
             header.Children.Add(tools);
             page.Children.Add(header);
@@ -446,7 +446,7 @@ namespace SamsungCONNECT
             resumeChip.Click += app.Resume;
             right.Children.Add(resumeChip);
             right.Children.Add(IconButton(Glyphs.Add, "Add a site", "addsite", ShowAddTile));
-            right.Children.Add(IconButton(Glyphs.ForMode(Theme.Mode), "Theme: " + Theme.Mode, "theme", CycleTheme));
+            right.Children.Add(ThemeSwitch());
             right.Children.Add(IconButton(Glyphs.Settings, "Settings", "settings", ShowSettings));
             right.Children.Add(IconButton(Glyphs.Laptop, "Back to laptop screen", "laptop", app.BackToLaptop));
             right.Children.Add(IconButton(Glyphs.Power, "Exit and restore laptop", "exit", app.Exit));
@@ -782,7 +782,30 @@ namespace SamsungCONNECT
             return b;
         }
 
-        void CycleTheme() { SetTheme(Theme.NextMode(Theme.Mode)); Toast("Theme: " + Theme.Mode + (Theme.Mode == "System" ? " (follows Windows)" : "")); }
+        // Sun  [ o   ]  Moon : one click flips light <-> dark.
+        Neu ThemeSwitch()
+        {
+            Palette p = Theme.Current;
+            bool dark = p.IsDark;
+            StackPanel row = Row(); row.Margin = new Thickness(16, 10, 16, 10);
+            row.Children.Add(Theme.Glyph(Glyphs.Sun, 20, dark ? p.SubText : p.Accent));
+            Grid inner = new Grid { Width = 64, Height = 32 };
+            Border track = Theme.Inset(inner, 16); track.Margin = new Thickness(12, 0, 12, 0); track.VerticalAlignment = VerticalAlignment.Center;
+            if (dark) track.Background = Theme.AccentSurface();
+            Neu knob = new Neu(null, 12, 3, false) { Width = 24, Height = 24, Margin = new Thickness(4, 0, 4, 0),
+                HorizontalAlignment = dark ? HorizontalAlignment.Right : HorizontalAlignment.Left };
+            inner.Children.Add(knob);
+            row.Children.Add(track);
+            row.Children.Add(Theme.Glyph(Glyphs.Moon, 20, dark ? p.Accent : p.SubText));
+            Neu b = new Neu(row, 31, 6, true, false, 1.06, dark ? "Dark mode on. Switch to light" : "Light mode on. Switch to dark")
+                { Height = 62, Margin = new Thickness(18, 0, 0, 0), Tag = "theme", ToolTip = "Light / dark" };
+            b.Click += delegate
+            {
+                string next = dark ? "Light" : "Dark";
+                SetTheme(next); Toast(next + " mode");
+            };
+            return b;
+        }
         void SetTheme(string mode)
         {
             app.SetTheme(mode);

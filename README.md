@@ -37,7 +37,7 @@ While you're on the TV, **closing the lid does nothing**, so you can shut the la
 
 ## Light and dark mode
 
-The soft neumorphic design comes in light and dark. The sun/moon button cycles **System → Light → Dark**. **System** follows your Windows colour mode.
+The soft neumorphic design comes in light and dark. Flip the **sun ◐ moon switch** at the top of the main screen (or select it and press Enter) to change instantly. To follow your Windows colour mode instead, choose **Settings → Appearance → System**.
 
 ## Keyboard shortcuts
 
