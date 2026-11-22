@@ -37,7 +37,7 @@ namespace SamsungCONNECT
                 S("netflix", "Netflix", "https://www.netflix.com/browse", "Popular", "#000000", "#E50914", "N"),
                 S("prime", "Prime Video", "https://www.primevideo.com/", "Popular", "#0F171E", "#1A98FF", "prime"),
                 S("hotstar", "JioHotstar", "https://www.hotstar.com/in", "Popular", "#0C1F4A", "#FFFFFF", "JH"),
-                S("youtube", "YouTube", "https://www.youtube.com/", "Popular", "#FF0000", "#FFFFFF", "▶"),
+                S("youtube", "YouTube", "https://www.youtube.com/", "Popular", "#FF0000", "#FFFFFF", "YT"),
                 S("zee5", "ZEE5", "https://www.zee5.com/", "Popular", "#8230C6", "#FFFFFF", "ZEE5"),
                 S("sonyliv", "SonyLIV", "https://www.sonyliv.com/", "Popular", "#111111", "#F2B53A", "LIV"),
                 S("jiotv", "JioTV", "https://www.jiotv.com/", "Popular", "#D9008D", "#FFFFFF", "JioTV"),
@@ -57,7 +57,7 @@ namespace SamsungCONNECT
                 S("tataplay", "Tata Play Binge", "https://www.tataplaybinge.com/", "More to watch", "#220046", "#E10092", "B"),
                 S("fancode", "FanCode", "https://www.fancode.com/", "More to watch", "#111111", "#FF5A00", "FC"),
 
-                S("ytmusic", "YouTube Music", "https://music.youtube.com/", "Music", "#FF0000", "#FFFFFF", "♫"),
+                S("ytmusic", "YouTube Music", "https://music.youtube.com/", "Music", "#FF0000", "#FFFFFF", "YTM"),
                 S("spotify", "Spotify", "https://open.spotify.com/", "Music", "#1DB954", "#000000", "S"),
                 S("jiosaavn", "JioSaavn", "https://www.jiosaavn.com/", "Music", "#2BC5B4", "#FFFFFF", "JS"),
             };

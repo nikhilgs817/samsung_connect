@@ -197,13 +197,13 @@ namespace SamsungCONNECT
             t.Margin = new Thickness(28, 16, 28, 16); t.MaxWidth = 1000;
             Neu chip = new Neu(t, 28, 8, false) { HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Bottom, Margin = new Thickness(0, 0, 0, 40) };
             toastHost.Children.Add(chip);
-            chip.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(180)));
+            chip.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(220)) { EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseOut } });
             if (toastTimer != null) toastTimer.Stop();
             toastTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3.5) };
             toastTimer.Tick += delegate
             {
                 toastTimer.Stop();
-                DoubleAnimation fade = new DoubleAnimation(0, TimeSpan.FromMilliseconds(300));
+                DoubleAnimation fade = new DoubleAnimation(0, TimeSpan.FromMilliseconds(300)) { EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseOut } };
                 fade.Completed += delegate { if (toastHost.Children.Contains(chip)) toastHost.Children.Remove(chip); };
                 chip.BeginAnimation(OpacityProperty, fade);
             };
@@ -400,13 +400,13 @@ namespace SamsungCONNECT
             Border well = Theme.Inset(Theme.Spinner(84, p.AccentInk), 64); well.Width = 128; well.Height = 128; well.VerticalAlignment = VerticalAlignment.Top;
             body.Children.Add(well);
             StackPanel text = new StackPanel { Margin = new Thickness(40, 0, 0, 0) }; Grid.SetColumn(text, 1);
-            text.Children.Add(Theme.Text("STEP " + Math.Max(1, statusStep) + " OF 3", 16, FontWeights.Bold, p.AccentInk));
             TextBlock t = Theme.Text(statusTitle, 32, FontWeights.Bold, p.Text); t.Margin = new Thickness(0, 8, 0, 0); text.Children.Add(t);
             TextBlock d = Theme.Text(statusDetail, 19, FontWeights.Normal, p.SubText); d.Margin = new Thickness(0, 10, 0, 22); text.Children.Add(d);
             StackPanel dots = Row(); dots.Margin = new Thickness(0, 0, 0, 30);
             for (int i = 1; i <= 3; i++)
                 dots.Children.Add(new Border { Width = 56, Height = 8, CornerRadius = new CornerRadius(4), Margin = new Thickness(0, 0, 10, 0),
                     Background = i <= Math.Max(1, statusStep) ? Theme.Brush(p.AccentInk) : Theme.Brush(p.SubText, 0.25) });
+            TextBlock stepOf = Theme.Text("Step " + Math.Max(1, statusStep) + " of 3", 16, FontWeights.SemiBold, p.SubText); stepOf.Margin = new Thickness(6, -5, 0, 0); stepOf.VerticalAlignment = VerticalAlignment.Center; dots.Children.Add(stepOf);
             text.Children.Add(dots);
             Neu cancel = Pill(Glyphs.Back, "Cancel, stay on laptop", false, app.Cancel); cancel.HorizontalAlignment = HorizontalAlignment.Left;
             text.Children.Add(cancel);
@@ -581,7 +581,7 @@ namespace SamsungCONNECT
             overlayHost.Visibility = Visibility.Visible;
             pageHost.IsHitTestVisible = false;
             card.Opacity = 0;
-            card.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(160)));
+            card.BeginAnimation(OpacityProperty, new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(220)) { EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseOut } });
             FocusDefault();
         }
         void CloseOverlay()

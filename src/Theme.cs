@@ -29,15 +29,15 @@ namespace SamsungCONNECT
         {
             IsDark = false, Base = Hex("#7B1626"), Surface = Hex("#F4EFE6"), LightShadow = Hex("#A3283C"), DarkShadow = Hex("#3E0710"),
             Text = Hex("#4A0F1A"), SubText = Hex("#86606A"), BaseText = Hex("#FFF8EF"), BaseSubText = Hex("#EBC6C9"),
-            Accent = Hex("#C3E62F"), AccentInk = Hex("#5C7A00"), AccentText = Hex("#26300A"),
+            Accent = Hex("#C3E62F"), AccentInk = Hex("#4E6900"), AccentText = Hex("#26300A"),
             Ok = Hex("#2F8A3E"), Danger = Hex("#B3261E"), LightOpacity = 0.7, DarkOpacity = 0.85
         };
         // Dark: Midnight graphite 60% / Lunar silver 30% / Signal orange 10%
         internal static readonly Palette Dark = new Palette
         {
             IsDark = true, Base = Hex("#1C1F26"), Surface = Hex("#C5CAD3"), LightShadow = Hex("#323743"), DarkShadow = Hex("#08090C"),
-            Text = Hex("#1C1F26"), SubText = Hex("#525A68"), BaseText = Hex("#E4E7EC"), BaseSubText = Hex("#9AA1AE"),
-            Accent = Hex("#FF6A13"), AccentInk = Hex("#C94A00"), AccentText = Hex("#FFFFFF"),
+            Text = Hex("#1C1F26"), SubText = Hex("#454C59"), BaseText = Hex("#E4E7EC"), BaseSubText = Hex("#9AA1AE"),
+            Accent = Hex("#FF6A13"), AccentInk = Hex("#963500"), AccentText = Hex("#FFFFFF"),
             Ok = Hex("#1E7D4F"), Danger = Hex("#B3261E"), LightOpacity = 0.8, DarkOpacity = 0.9
         };
         internal static Palette Current = Light;
