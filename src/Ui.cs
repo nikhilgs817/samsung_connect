@@ -646,6 +646,35 @@ namespace SamsungCONNECT
                 foreach (NeuToggle t in new[] { lid, auto, start }) { t.Margin = new Thickness(0, 0, 0, 16); body.Children.Add(t); }
                 body.Children.Add(Note("While this app is open your laptop never sleeps, dims or locks."));
 
+                body.Children.Add(Label("Your sites"));
+                List<ServiceInfo> mine = app.CustomTiles;
+                if (mine.Count == 0) body.Children.Add(Note("You haven't added any sites yet. Use Add a site below or the + button on the home screen."));
+                foreach (ServiceInfo site in mine)
+                {
+                    ServiceInfo s = site;
+                    Grid row = new Grid { Margin = new Thickness(0, 0, 0, 14) };
+                    row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                    row.ColumnDefinitions.Add(new ColumnDefinition());
+                    row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                    row.Children.Add(IconBox(s, 52));
+                    StackPanel info = new StackPanel { Margin = new Thickness(18, 0, 18, 0), VerticalAlignment = VerticalAlignment.Center };
+                    info.Children.Add(Theme.Text(s.Name, 19, FontWeights.SemiBold, p.Text));
+                    TextBlock link = Theme.Text(s.Url, 15, FontWeights.Normal, p.SubText); link.TextWrapping = TextWrapping.NoWrap; link.TextTrimming = TextTrimming.CharacterEllipsis;
+                    info.Children.Add(link);
+                    Grid.SetColumn(info, 1); row.Children.Add(info);
+                    Neu remove = Pill(Glyphs.Close, "Remove", false, delegate
+                    {
+                        List<ServiceInfo> list = app.CustomTiles;
+                        list.RemoveAll(delegate(ServiceInfo x) { return x.Id == s.Id; });
+                        app.SaveCustomTiles(list);
+                        Toast("Removed " + s.Name + ".");
+                        if (launcher) { overlayFactory = null; Build(); ShowSettings(); } else RenderOverlay();
+                    });
+                    AutomationProperties.SetName(remove, "Remove " + s.Name);
+                    Grid.SetColumn(remove, 2); row.Children.Add(remove);
+                    body.Children.Add(row);
+                }
+
                 body.Children.Add(Label("Tiles"));
                 WrapPanel tileActions = new WrapPanel();
                 Neu refresh = Pill(Glyphs.Auto, "Refresh logos", false, delegate { app.RefreshLogos(); Toast("Downloading logos again."); });
