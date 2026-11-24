@@ -188,6 +188,10 @@ namespace SamsungCONNECT
                 w.CloseConfirm();
                 w.ShowSettingsForTest();
                 Snap(w, Path.Combine(outDir, "settings-" + m + ".png"), 1920, 1080);
+                w.ShowAddTileForTest();
+                Snap(w, Path.Combine(outDir, "add-site-" + m + ".png"), 1920, 1080);
+                w.ShowTileMenuForTest(Catalog.BuiltIn()[0]);
+                Snap(w, Path.Combine(outDir, "tile-menu-" + m + ".png"), 1920, 1080);
                 w.Hide();
             }
         }

@@ -599,6 +599,8 @@ namespace SamsungCONNECT
         }
 
         internal void ShowSettingsForTest() { ShowSettings(); }
+        internal void ShowAddTileForTest() { ShowAddTile(); }
+        internal void ShowTileMenuForTest(ServiceInfo s) { ShowTileMenu(s); }
         void ShowSettings()
         {
             ShowOverlay("settings", delegate

@@ -2,7 +2,9 @@
 
 Turn your Windows laptop into a smart-TV box. Connect to your TV wirelessly or with an HDMI cable, then pick Netflix, Prime Video, JioHotstar, YouTube and other Indian streaming services from a big-screen home screen. You can drive it all with a wireless mouse and keyboard.
 
-[Download](SamsungCONNECT.exe) · [Build from source](docs/BUILDING.md) · [Security review](docs/SECURITY-REVIEW.md) · [Changelog](CHANGELOG.md)
+**[📖 Read the full user guide](docs/USER-GUIDE.md)**: setup, every feature and setting, shortcuts, troubleshooting and FAQ, with screenshots.
+
+[Download](SamsungCONNECT.exe) · [User guide](docs/USER-GUIDE.md) · [Build from source](docs/BUILDING.md) · [Security review](docs/SECURITY-REVIEW.md) · [Changelog](CHANGELOG.md)
 
 ![The TV home screen in light mode](docs/launcher-light.png)
 
@@ -118,7 +120,7 @@ Remove-Item -Path "$env:LOCALAPPDATA\SamsungCONNECT" -Recurse
 ## Source
 
 - `src/` — the app: `Program.cs` (start-up), `Controller.cs` (connect flows, watchdog, tray, hotkeys), `Display.cs` (safety rules and Windows display APIs), `Power.cs` (keep-awake and lid), `Services.cs` (streaming catalog, settings, logo download, Chrome launcher), `Theme.cs` (neumorphic controls), `Ui.cs` (screens).
-- `tests/SafetyTests.cs` — 60 automated checks plus screenshots of every screen. These checks never change your display, power or startup settings.
+- `tests/SafetyTests.cs` — 64 automated checks plus screenshots of every screen. These checks never change your display, power or startup settings.
 - `build.ps1` — builds with the compiler that ships with Windows. No Visual Studio or NuGet. See [docs/BUILDING.md](docs/BUILDING.md).
 
 Not affiliated with Samsung or any streaming service. Service names and logos belong to their owners; logos are fetched from their own websites and shown only to label the links.
